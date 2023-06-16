@@ -22,15 +22,28 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     controller = AnimationController(
         duration: const Duration(seconds: 1), vsync: this); //remove upperbound
 
-    animation = CurvedAnimation(parent: controller, curve: Curves.decelerate);
+    animation = CurvedAnimation(parent: controller, curve: Curves.easeIn);
 
     controller.forward();
 
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        controller.reverse(from: 1);
+      } else if (status == AnimationStatus.dismissed) {
+        controller.forward();
+      }
+    });
 //to see what's happening we have to add a listener
     controller.addListener(() {
       setState(() {});
       print(animation.value);
     });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -48,13 +61,13 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 Hero(
                   tag: 'logo',
                   child: SizedBox(
-                    height: controller.value,
+                    height: animation.value * 95,
                     child: Image.asset('images/logo.png'),
                   ),
                 ),
-                Text(
-                  '${controller.value.toInt()}%',
-                  style: const TextStyle(
+                const Text(
+                  'Flash Chat',
+                  style: TextStyle(
                     fontSize: 45.0,
                     fontWeight: FontWeight.w900,
                   ),
