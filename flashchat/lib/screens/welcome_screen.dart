@@ -21,12 +21,14 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     controller = AnimationController(
       duration: const Duration(seconds: 1),
       vsync: this,
+      upperBound: 100.0,
     );
 
     controller.forward();
 
 //to see what's happening we have to add a listener
     controller.addListener(() {
+      setState(() {});
       print(controller.value);
     });
   }
@@ -50,9 +52,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     child: Image.asset('images/logo.png'),
                   ),
                 ),
-                const Text(
-                  'Flash Chat',
-                  style: TextStyle(
+                Text(
+                  '${controller.value.toInt()}%',
+                  style: const TextStyle(
                     fontSize: 45.0,
                     fontWeight: FontWeight.w900,
                   ),
